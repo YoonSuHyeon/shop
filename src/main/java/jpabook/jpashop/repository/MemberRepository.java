@@ -20,7 +20,7 @@ public class MemberRepository {
     private final EntityManager em;
 
     public void save(Member member) {
-        em.persist(em);
+        em.persist(member);
     }
 
     public Member findOne(Long memberId) {
