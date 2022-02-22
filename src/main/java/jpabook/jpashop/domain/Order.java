@@ -49,5 +49,40 @@ public class Order {
         delivery.setOrder(this);
     }
 
+    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+
+        for (OrderItem orderItem : orderItems)
+            order.addOrderItem(orderItem);
+
+        order.setStatus(OrderStatus.ORDER);
+        order.setOrderDate(LocalDateTime.now());
+
+        return order;
+    }
+
+    /**
+     * 주문 취소
+     */
+    public void cancel() {
+        if (delivery.getStatus() == DeliveryStatus.COMP)
+            throw new IllegalStateException("이미 배송이 완료된 주문은 취소가 불가능 합니다.");
+
+        status = OrderStatus.CANCEL;
+
+        for (OrderItem orderItem : orderItems)
+            orderItem.cancel();
+
+    }
+
+    /**
+     * 전체 가격 조회
+     * @return
+     */
+    public int getTotalPrice() {
+        return orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();
+    }
 
 }
